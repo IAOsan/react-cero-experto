@@ -1,0 +1,36 @@
+{
+	"name": "react-cero-experto",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"test": "vitest --run",
+		"test:watch": "vitest",
+		"lint": "eslint --max-warnings=0 src",
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"start": "browser-sync start --server 'dist' --files 'dist' --no-open"
+	},
+	"dependencies": {
+		"prop-types": "^15.8.1",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"devDependencies": {
+		"@testing-library/jest-dom": "^5.16.5",
+		"@testing-library/react": "^13.3.0",
+		"@testing-library/user-event": "^14.4.2",
+		"@types/react": "^18.0.15",
+		"@types/react-dom": "^18.0.6",
+		"@vitejs/plugin-react": "^2.0.0",
+		"eslint": "^8.0.0",
+		"eslint-config-react-app": "^7.0.1",
+		"isomorphic-fetch": "^3.0.0",
+		"jsdom": "^20.0.0",
+		"nock": "^13.2.9",
+		"vite": "^3.0.0",
+		"vite-plugin-svgr": "^2.2.1",
+		"vitest": "^0.21.0"
+	}
+}
