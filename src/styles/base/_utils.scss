@@ -1,0 +1,148 @@
+.d {
+	&-block {
+		display: block;
+	}
+}
+.flex {
+	display: flex;
+	&-ai-c {
+		align-items: center;
+	}
+	&-jc-c {
+		justify-content: center;
+	}
+	&-jc-sb {
+		justify-content: space-between;
+	}
+}
+.bg {
+	// &-primary {
+	// 	background-color: map-get($c-primary, 500) !important;
+	// }
+	// &-primary-700 {
+	// 	background-color: map-get($c-primary, 700);
+	// }
+	&-light {
+		background-color: map-get($c-light, 500);
+	}
+	&-dark {
+		background-color: map-get($c-dark, 500);
+	}
+}
+.m {
+	&b {
+		&-8 {
+			margin-bottom: 0.8rem;
+		}
+		&-24 {
+			margin-bottom: 2.4rem;
+		}
+	}
+	&t {
+		&-20 {
+			margin-top: 2rem;
+		}
+	}
+	&r {
+		&-8 {
+			margin-right: 0.8rem;
+		}
+	}
+	&y {
+		&-20 {
+			margin-top: 2rem;
+			margin-bottom: 2rem;
+		}
+		&-12 {
+			margin-top: 1.2rem;
+			margin-bottom: 1.2rem;
+		}
+	}
+	&x {
+		&-8 {
+			margin-left: 0.8rem;
+			margin-right: 0.8rem;
+		}
+	}
+}
+.p {
+	&-24 {
+		padding: 2.4rem;
+	}
+}
+.text {
+	&-primary-alt {
+		color: map-get($c-primary, 700);
+	}
+	&-danger {
+		color: map-get($c-danger, 600);
+	}
+	&-muted {
+		color: map-get($c-dark, 200) !important;
+	}
+	&-light {
+		color: map-get($c-light, 500);
+	}
+	&-center {
+		text-align: center;
+	}
+	&-underline {
+		text-decoration: underline !important;
+	}
+}
+.font {
+	&-body {
+		font-family: $body-font;
+	}
+}
+.spacing {
+	&-y {
+		&-8 {
+			& > *:not(:last-child) {
+				margin-bottom: 0.8rem;
+			}
+		}
+	}
+	&-x {
+		&-8 {
+			& > *:not(:last-child) {
+				margin-right: 0.8rem;
+			}
+		}
+	}
+}
+.pos {
+	&-rel {
+		position: relative;
+	}
+	&-abs {
+		position: absolute;
+	}
+	&-centered {
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+.w-100 {
+	width: 100%;
+}
+.h-100 {
+	height: 100%;
+}
+.shadow {
+	&-2 {
+		box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+	}
+	&-5 {
+		box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	}
+	&-22 {
+		box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+			rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+	}
+	&-56 {
+		box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+			rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+	}
+}

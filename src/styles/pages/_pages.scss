@@ -1,0 +1,21 @@
+.page {
+	min-height: 100vh;
+}
+.auth {
+	&__box-form {
+		padding: 2.4rem 3.2rem;
+		border-radius: 0.4rem;
+		box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+			rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+		width: 100%;
+		max-width: 38rem;
+	}
+}
+.home {
+	&__sidebar {
+		flex: 0 0 36rem;
+	}
+	&__body {
+		flex: 0 0 calc(100% - 36rem);
+	}
+}

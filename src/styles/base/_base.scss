@@ -1,0 +1,65 @@
+*,
+*::before,
+*::after {
+	padding: 0;
+	margin: 0;
+	box-sizing: inherit;
+}
+
+html {
+	font-size: $text-base-size-sm;
+	box-sizing: border-box;
+	@include respond(768) {
+		font-size: $text-base-size;
+	}
+	@include respond(1600) {
+		font-size: $text-base-size-lg;
+	}
+}
+
+body {
+	font-size: $text-size;
+	font-family: $body-font;
+	font-weight: 400;
+	color: map-get($c-dark, 500);
+	background-color: map-get($c-primary, 700);
+	min-height: 100vh;
+	line-height: $lineheight-rg;
+}
+ul {
+	list-style: none;
+}
+a {
+	text-decoration: none;
+	color: map-get($c-primary, 500);
+	transition: color $trs-rg;
+	&:hover {
+		color: map-get($c-primary, 700);
+	}
+}
+img,
+picture {
+	display: block;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: $heading-font;
+	font-weight: 700;
+	line-height: $lineheight-sm;
+}
+input,
+button,
+textarea,
+select,
+label {
+	font: inherit;
+}
+hr {
+	height: 0.2rem;
+	background-color: map-get($c-dark, 50);
+	border: none;
+}

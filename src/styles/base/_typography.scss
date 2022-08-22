@@ -1,0 +1,17 @@
+.heading {
+	&-1 {
+		font-size: $text-xxxl;
+	}
+	&-2 {
+		font-size: $text-xxl;
+	}
+	&-3 {
+		font-size: $text-xl;
+	}
+	&-4 {
+		font-size: $text-lg;
+	}
+	&-5 {
+		font-size: $text-md;
+	}
+}

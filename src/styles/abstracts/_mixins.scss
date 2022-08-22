@@ -1,0 +1,44 @@
+@function fontSize($size, $scale: 1.2, $fs: 1.8) {
+	$result: 0;
+	$xs: calc(($fs / $scale) / $scale);
+	$sm: $xs * $scale;
+	$md: $sm * $scale * $scale;
+	$lg: $md * $scale;
+	$xl: $lg * $scale;
+	$xxl: $xl * $scale;
+	$xxxl: $xxl * $scale;
+
+	@if $size == 'xs' {
+		$result: $xs;
+	}
+	@if $size == 'sm' {
+		$result: $sm;
+	}
+	@if $size == 'md' {
+		$result: $md;
+	}
+	@if $size == 'lg' {
+		$result: $lg;
+	}
+	@if $size == 'xl' {
+		$result: $xl;
+	}
+	@if $size == 'xxl' {
+		$result: $xxl;
+	}
+	@if $size == 'xxxl' {
+		$result: $xxxl;
+	}
+
+	@return $result * 1rem;
+}
+
+@mixin respond($breakpoint, $type: 'min-width') {
+	@if $type == 'down' {
+		$type: 'max-width';
+	}
+
+	@media only screen and (#{$type}: #{calc($breakpoint / 16)}em) {
+		@content;
+	}
+}

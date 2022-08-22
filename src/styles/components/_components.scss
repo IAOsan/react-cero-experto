@@ -1,0 +1,222 @@
+.img-box {
+	position: relative;
+	padding-bottom: 66.66%;
+	padding-bottom: 177%;
+	width: 100%;
+	background-color: map-get($c-dark, 200);
+	img {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+.icon {
+	width: 1.8rem;
+	height: 1.8rem;
+	margin-bottom: -0.2rem;
+	display: inline-block;
+	&-display-2 {
+		width: 12rem;
+		height: 12rem;
+	}
+	&-display-3 {
+		width: 8rem;
+		height: 8rem;
+	}
+}
+.btn {
+	border: none;
+	transition: background-color $trs-rg;
+	&:not(:disabled) {
+		cursor: pointer;
+	}
+	&:disabled {
+		opacity: 0.7;
+	}
+	&--default {
+		padding: 0.8rem 1.2rem;
+		display: inline-block;
+	}
+	&--primary {
+		background-color: map-get($c-primary, 500);
+		color: map-get($c-light, 500);
+		&:hover:not(:disabled) {
+			background-color: map-get($c-primary, 700);
+		}
+		&:focus {
+			outline: 0.4rem solid map-get($c-primary, 300);
+		}
+	}
+	&--dark {
+		background-color: map-get($c-dark, 500);
+		color: map-get($c-light, 500);
+		&:hover:not(:disabled) {
+			background-color: map-get($c-dark, 700);
+		}
+		&:focus {
+			outline: 0.4rem solid map-get($c-dark, 300);
+		}
+	}
+	&--block {
+		display: block;
+		width: 100%;
+	}
+}
+.google-btn {
+	margin-top: 0.5rem;
+	width: 100%;
+	height: 4.8rem;
+	background-color: $google-blue;
+	border-radius: 0.2rem;
+	box-shadow: 0 0.3rem 0.4rem 0 rgba(0, 0, 0, 0.25);
+	transition: box-shadow $trs-rg ease;
+	.google-icon-wrapper {
+		position: absolute;
+		margin-top: 0.2rem;
+		margin-left: 0.2rem;
+		width: 4.4rem;
+		height: 4.4rem;
+		border-radius: 0.2rem;
+		background-color: map-get($c-light, 50);
+	}
+	.google-icon {
+		position: absolute;
+		margin-top: 1.3rem;
+		margin-left: 1.3rem;
+		width: 1.8rem;
+		height: 1.8rem;
+	}
+	.btn-text {
+		height: 100%;
+		text-align: center;
+		margin: 0 0 0 4.4rem;
+		line-height: 4.8rem;
+		color: map-get($c-light, 50);
+		letter-spacing: 0.02rem;
+	}
+	&:hover {
+		box-shadow: 0 0 0.6rem $google-blue;
+	}
+	&:active {
+		background: $button-active-blue;
+	}
+}
+.form {
+	&__group {
+		margin: 0.8rem 0;
+	}
+	&__control {
+		border: none;
+		border-bottom: 0.2rem solid map-get($c-dark, 100);
+		background-color: map-get($c-light, 500);
+		padding: 0.8rem;
+		width: 100%;
+		color: map-get($c-dark, 500);
+		transition: border $trs-rg;
+		&:focus {
+			border-bottom: 0.2rem solid map-get($c-primary, 700);
+			outline: none;
+		}
+	}
+	&--notes {
+		&__control {
+			border: none;
+			border-bottom: unset;
+			transition: unset;
+			&:focus {
+				border-bottom: unset;
+				outline: none;
+			}
+		}
+		&__textarea {
+			flex: 1;
+			resize: none;
+		}
+	}
+}
+.sidebar {
+	color: map-get($c-light, 500);
+	padding: 2.8rem 1.6rem;
+	height: 100vh;
+	&__new-entry {
+		width: 100%;
+		transition: opacity $trs-rg, transform $trs-rg;
+		background-color: transparent;
+		color: map-get($c-light, 500);
+		&:hover {
+			opacity: 0.5;
+			transform: scale(0.95);
+		}
+	}
+}
+.entries {
+	height: calc(100vh - 24.1rem);
+	overflow-y: auto;
+	overflow-x: visible;
+}
+.entry {
+	border-radius: 0.8rem;
+	background-color: map-get($c-light, 500);
+	color: map-get($c-dark, 500);
+	overflow: hidden;
+	font-size: $text-xs;
+	transition: transform $trs-rg;
+	text-align: left;
+	&:hover,
+	&:focus {
+		transform: scale(0.95);
+	}
+	&__img-box {
+		flex: 1;
+		background-image: var(--bg);
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+	&__body {
+		flex: 3;
+		padding: 1.2rem;
+	}
+	&__date {
+		min-width: 7rem;
+		background-color: map-get($c-dark, 50);
+		padding: 1.2rem;
+	}
+}
+.notes {
+	flex-direction: column;
+	position: relative;
+	background-color: map-get($c-light, 500);
+	&__navbar {
+		padding: 1.2rem 2rem;
+	}
+	&__body {
+		flex-direction: column;
+		padding: 1.2rem 2rem;
+		height: calc(100vh - 7rem);
+	}
+	&__image-container {
+		img {
+			width: 24rem;
+			height: auto;
+		}
+	}
+	&__meta {
+		position: absolute;
+		right: 1.6rem;
+		bottom: 1.6rem;
+	}
+	&__remove-btn {
+		align-self: center;
+		text-align: center;
+		width: max-content;
+		background-color: transparent;
+		color: map-get($c-dark, 300);
+		&:hover {
+			background-color: map-get($c-dark, 50);
+		}
+	}
+}

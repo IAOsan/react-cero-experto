@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap');
+
+$c-dark: (
+	50: #e4e4e4,
+	100: #bcbcbc,
+	200: #909090,
+	300: #646464,
+	400: #424242,
+	500: #212121,
+	600: #1d1d1d,
+	700: #181818,
+	800: #141414,
+	900: #0b0b0b,
+);
+$c-light: (
+	50: #fefdfd,
+	100: #fcfbfb,
+	200: #faf9f8,
+	300: #f8f6f5,
+	400: #f7f4f2,
+	500: #f5f2f0,
+	600: #f4f0ee,
+	700: #f2eeec,
+	800: #f0ece9,
+	900: #eee8e5,
+);
+$c-primary: (
+	50: #f0ebf8,
+	100: #d8cded,
+	200: #bface1,
+	300: #a58ad4,
+	400: #9171cb,
+	500: #7e58c2,
+	600: #7650bc,
+	700: #6b47b4,
+	800: #613dac,
+	900: #4e2d9f,
+);
+$c-danger: (
+	50: #f9e7e7,
+	100: #efc2c2,
+	200: #e59a9a,
+	300: #db7171,
+	400: #d35252,
+	500: #cb3434,
+	600: #c62f2f,
+	700: #be2727,
+	800: #b82121,
+	900: #ac1515,
+);
+
+$google-blue: #4285f4;
+$button-active-blue: #1669f2;
+$text-scale-ratio: 1.2;
+$text-base-size-lg: 76.39%;
+$text-base-size: 62.5%;
+$text-base-size-sm: 55.56%;
+$text-size: 1.8rem;
+$text-xs: fontSize(xs);
+$text-sm: fontSize(sm);
+$text-md: fontSize(md);
+$text-lg: fontSize(lg);
+$text-xl: fontSize(xl);
+$text-xxl: fontSize(xxl);
+$text-xxxl: fontSize(xxxl);
+$body-font: 'Source Sans Pro', sans-serif;
+$heading-font: 'Bebas Neue', cursive;
+$lineheight-rg: 1.6;
+$lineheight-sm: 1.2;
+$trs-rg: 320ms;
