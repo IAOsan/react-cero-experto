@@ -1,0 +1,86 @@
+// Vitest Snapshot v1
+
+exports[`<Login > page > should renders correctly 1`] = `
+<form
+  class="form anima-fade-in-bck"
+>
+  <h2
+    class="heading-2 mb-24 text-primary-alt"
+  >
+    Log in
+  </h2>
+  <div
+    class="form__group"
+  >
+    <input
+      class="form__control"
+      id="inputEmail"
+      name="email"
+      placeholder="Email"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="form__group"
+  >
+    <input
+      class="form__control"
+      id="inputPassword"
+      name="password"
+      placeholder="Password"
+      type="password"
+      value=""
+    />
+  </div>
+  <button
+    class="btn btn--default btn--primary btn--block my-20"
+    disabled=""
+    type="submit"
+  >
+    <div
+      class="flex flex-ai-c flex-jc-c"
+    >
+      Login
+    </div>
+  </button>
+  <hr />
+  <p
+    class="text-center text-muted my-12"
+  >
+    <strong>
+      Login with social networks
+    </strong>
+  </p>
+  <button
+    class="btn google-btn"
+    type="button"
+  >
+    <div
+      class="google-icon-wrapper"
+    >
+      <img
+        alt="google button"
+        class="google-icon"
+        src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+      />
+    </div>
+    <p
+      class="btn-text"
+    >
+      Sign in with Google
+    </p>
+  </button>
+  <p
+    class="mt-20 text-center"
+  >
+    Need an account?
+    <a
+      class="mx-8 text-underline"
+      href="/auth/register"
+    >
+      REGISTER
+    </a>
+  </p>
+</form>
+`;

@@ -4,10 +4,11 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"test": "vitest --run",
-		"test:watch": "vitest",
+		"testing": "vitest --run",
+		"testing:watch": "vitest",
 		"lint": "eslint --max-warnings=0 src",
 		"dev": "vite",
+		"test": "vite --mode test",
 		"build": "vite build",
 		"preview": "vite preview",
 		"start": "browser-sync start --server 'dist' --files 'dist' --no-open"
@@ -34,7 +35,7 @@
 		"eslint-config-react-app": "^7.0.1",
 		"isomorphic-fetch": "^3.0.0",
 		"jsdom": "^20.0.0",
-		"nock": "^13.2.9",
+		"msw": "^0.45.0",
 		"sass": "^1.54.4",
 		"vite": "^3.0.0",
 		"vite-plugin-svgr": "^2.2.1",

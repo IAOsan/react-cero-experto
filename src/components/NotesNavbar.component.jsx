@@ -15,9 +15,9 @@ function NotesNavbar() {
 
 	function handleChangeFile({ target: { files } }) {
 		if (!files.length) return;
-		const file = files[0];
-		setImage(file);
-		dispatch(addImageToNote(file));
+		const [image] = files;
+		setImage(image);
+		dispatch(addImageToNote(image));
 	}
 
 	function handleSave() {
@@ -26,7 +26,7 @@ function NotesNavbar() {
 
 	return (
 		<nav className='bg-primary shadow-22 text-light w-100 flex flex-ai-c flex-jc-sb notes__navbar'>
-			<p>{new Date(createdAt).toDateString()}</p>
+			<p>{generateNoteDate(createdAt)}</p>
 			<input
 				style={{
 					display: 'none',
@@ -54,6 +54,11 @@ function NotesNavbar() {
 			</div>
 		</nav>
 	);
+}
+
+export function generateNoteDate(timeStamp) {
+	const date = new Date(timeStamp);
+	return date.toDateString();
 }
 
 export default NotesNavbar;

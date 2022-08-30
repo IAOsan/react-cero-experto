@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import {
 	startLoading,
 	finishLoading,
@@ -8,7 +9,7 @@ import {
 import { clearNotes } from '../notes/notes.slice';
 import * as authService from '../../../services/auth.service';
 
-const initialState = {
+export const initialState = {
 	user: null,
 	isAuth: false,
 };
@@ -30,7 +31,7 @@ const slice = createSlice({
 
 export default slice.reducer;
 
-const { logged_in, logged_out } = slice.actions;
+export const { logged_in, logged_out } = slice.actions;
 
 export const login = logged_in;
 
@@ -71,7 +72,11 @@ export const registerWithEmailPassword = (data) => async (dispatch) => {
 };
 
 export const logout = async (dispatch) => {
-	await authService.logout();
-	dispatch(logged_out());
-	dispatch(clearNotes);
+	try {
+		await authService.logout();
+		dispatch(logged_out());
+		dispatch(clearNotes);
+	} catch (error) {
+		toast.error(error);
+	}
 };

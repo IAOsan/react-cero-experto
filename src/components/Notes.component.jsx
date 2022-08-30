@@ -17,8 +17,6 @@ function Notes() {
 		noteSchema
 	);
 	const dispatch = useDispatch();
-	const DEBOUNCE_TIME = 1000;
-	const debounceTimer = useRef();
 	const prevActive = useRef();
 	const { current: keepsRef } = useRef({ resetFormData });
 	const { id, title, body, imageUrl } = active || {};
@@ -34,10 +32,7 @@ function Notes() {
 	}, [active, keepsRef, id, title, body]);
 
 	useEffect(() => {
-		clearTimeout(debounceTimer.current);
-		debounceTimer.current = setTimeout(() => {
-			dispatch(changeNote(formData));
-		}, DEBOUNCE_TIME);
+		dispatch(changeNote(formData));
 	}, [formData, dispatch]);
 
 	return (

@@ -1,0 +1,33 @@
+// Vitest Snapshot v1
+
+exports[`<NotesNavbar /> > should renders properly 1`] = `
+<nav
+  class="bg-primary shadow-22 text-light w-100 flex flex-ai-c flex-jc-sb notes__navbar"
+>
+  <p>
+    Sun Aug 21 2022
+  </p>
+  <input
+    accept="image/*"
+    id="file_selector"
+    style="display: none;"
+    type="file"
+  />
+  <div
+    class="spacing-x-8"
+  >
+    <button
+      class="btn btn--default btn--primary"
+      type="button"
+    >
+      Picture
+    </button>
+    <button
+      class="btn btn--default btn--primary"
+      type="button"
+    >
+      Save
+    </button>
+  </div>
+</nav>
+`;

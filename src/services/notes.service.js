@@ -1,6 +1,6 @@
 import { db, firestore } from '../firebase/firebase.config';
 
-function createNote() {
+export function createNote() {
 	return {
 		title: '',
 		body: '',

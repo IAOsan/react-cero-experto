@@ -1,0 +1,38 @@
+// Vitest Snapshot v1
+
+exports[`<Entry /> > should renders properly 1`] = `
+<li
+  class="anima-fade-in-bottom"
+>
+  <button
+    class="btn w-100 flex entry"
+    type="button"
+  >
+    <div
+      class="entry__body"
+    >
+      <h3
+        class="font-body mb-8"
+      >
+        title
+      </h3>
+      <p>
+        body
+      </p>
+    </div>
+    <div
+      class="flex flex-ai-c flex-jc-c text-center entry__date"
+    >
+      <p>
+        <span>
+          Tuesday
+        </span>
+        <br />
+        <strong>
+          30
+        </strong>
+      </p>
+    </div>
+  </button>
+</li>
+`;

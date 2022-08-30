@@ -1,0 +1,87 @@
+// Vitest Snapshot v1
+
+exports[`<Notes /> > should be renders correctly 1`] = `
+<section
+  class="notes anima-fade-in-bck"
+>
+  <nav
+    class="bg-primary shadow-22 text-light w-100 flex flex-ai-c flex-jc-sb notes__navbar"
+  >
+    <p>
+      Sun Aug 21 2022
+    </p>
+    <input
+      accept="image/*"
+      id="file_selector"
+      style="display: none;"
+      type="file"
+    />
+    <div
+      class="spacing-x-8"
+    >
+      <button
+        class="btn btn--default btn--primary"
+        type="button"
+      >
+        Picture
+      </button>
+      <button
+        class="btn btn--default btn--primary"
+        type="button"
+      >
+        Save
+      </button>
+    </div>
+  </nav>
+  <div
+    class="flex notes__body"
+  >
+    <div
+      class="form__group"
+    >
+      <input
+        class="form__control form--notes__control"
+        id="inputTitle"
+        name="title"
+        placeholder="Some awesome title"
+        type="text"
+        value="title"
+      />
+    </div>
+    <div
+      class="form__group h-100"
+    >
+      <textarea
+        class="form__control form--notes__control form--notes__textarea h-100"
+        id="inputBody"
+        name="body"
+        placeholder="What happend today"
+      >
+        body
+      </textarea>
+    </div>
+    <hr
+      class="my-20"
+    />
+    <button
+      class="btn btn--default notes__remove-btn"
+    >
+      <svg
+        class="icon"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          clip-rule="evenodd"
+          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+          fill-rule="evenodd"
+        />
+      </svg>
+      <span>
+        Remove note
+      </span>
+    </button>
+  </div>
+</section>
+`;

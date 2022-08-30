@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 
 function Entries({ list }) {
 	return (
-		<div className='spacing-y-8 entries'>
+		<ul className='spacing-y-8 entries'>
 			{list.map((itm) => (
 				<Entry key={itm.id} {...itm} />
 			))}
-		</div>
+		</ul>
 	);
 }
 

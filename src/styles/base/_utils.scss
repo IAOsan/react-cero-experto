@@ -16,12 +16,9 @@
 	}
 }
 .bg {
-	// &-primary {
-	// 	background-color: map-get($c-primary, 500) !important;
-	// }
-	// &-primary-700 {
-	// 	background-color: map-get($c-primary, 700);
-	// }
+	&-primary {
+		background-color: map-get($c-primary, 500) !important;
+	}
 	&-light {
 		background-color: map-get($c-light, 500);
 	}

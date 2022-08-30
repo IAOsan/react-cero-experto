@@ -1,0 +1,17 @@
+// Vitest Snapshot v1
+
+exports[`<Spinner /> > should renders by default properly 1`] = `
+<div
+  class="flex flex-jc-c"
+>
+  <div
+    class="lds-ring"
+    style="--c: #4d4c7d;"
+  >
+    <div />
+    <div />
+    <div />
+    <div />
+  </div>
+</div>
+`;

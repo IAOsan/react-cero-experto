@@ -4,7 +4,7 @@ import * as notesService from '../../../services/notes.service';
 import * as imagesService from '../../../services/images.service';
 import { convertFileToBase64 } from '../../../constants/utils';
 
-const initialState = {
+export const initialState = {
 	list: [],
 	active: null,
 };
@@ -49,7 +49,7 @@ const slice = createSlice({
 
 export default slice.reducer;
 
-const {
+export const {
 	note_added,
 	note_changed,
 	note_updated,

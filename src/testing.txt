@@ -1,0 +1,9 @@
+TODO - testing
+TODO - funciones u objetos simples
+-services
+   -images
+   -auth
+   -notes
+-store
+TODO - componentes atomicos
+TODO - componentes que se integren con otros

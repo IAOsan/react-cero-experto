@@ -11,10 +11,6 @@ function Sidebar() {
 	const { list } = useSelector((state) => state.entities.notes);
 	const { name } = user || {};
 
-	function handleAddNewEntry() {
-		dispatch(addNote);
-	}
-
 	return (
 		<aside className='bg-dark home__sidebar sidebar anima-slide-in-left'>
 			<div className='flex flex-ai-c flex-jc-sb'>
@@ -33,7 +29,7 @@ function Sidebar() {
 				</button>
 			</div>
 			<button
-				onClick={handleAddNewEntry}
+				onClick={() => dispatch(addNote)}
 				className='btn my-12 text-center sidebar__new-entry'
 				type='button'
 			>

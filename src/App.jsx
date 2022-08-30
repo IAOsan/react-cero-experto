@@ -39,7 +39,7 @@ function App() {
 		<Router>
 			<ToastContainer
 				position='top-center'
-				autoClose={4500}
+				autoClose={2000}
 				hideProgressBar={false}
 				newestOnTop={false}
 				theme='colored'

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+export const initialState = {
 	isLoading: false,
 	error: null,
 };
@@ -24,7 +24,7 @@ const slice = createSlice({
 	},
 });
 
-const { load_started, load_finished, error_added, error_removed } =
+export const { load_started, load_finished, error_added, error_removed } =
 	slice.actions;
 export default slice.reducer;
 

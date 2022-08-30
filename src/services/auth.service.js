@@ -1,8 +1,8 @@
 import { auth, firebaseAuth } from '../firebase/firebase.config';
 
 const errorCodes = {
-	'auth/popup-closed-by-user': 'Popup closed by user',
-	'auth/cancelled-popup-request': 'Cancelled popup request',
+	// 'auth/popup-closed-by-user': 'Popup closed by user',
+	// 'auth/cancelled-popup-request': 'Cancelled popup request',
 	'auth/too-many-requests': {
 		email: 'Access to this account has been temporarily disabled due to many failed login attempts',
 	},
@@ -21,7 +21,7 @@ const errorCodes = {
 	},
 };
 
-function handleError(error) {
+export function handleError(error) {
 	const errorCode = error.code;
 	const clientError = errorCodes[errorCode];
 	if (clientError) {
@@ -30,7 +30,7 @@ function handleError(error) {
 	console.error(error);
 }
 
-function mapUserToView(user) {
+export function mapUserToView(user) {
 	return {
 		name: user.displayName,
 		email: user.email,

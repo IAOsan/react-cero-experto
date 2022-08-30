@@ -21,7 +21,7 @@ export function Register() {
 	const someInputsAreEmpty = Object.keys(formData).some((k) => !formData[k]);
 	const disableSubmit = someInputsAreEmpty || isLoading;
 
-	async function doSubmit() {
+	function doSubmit() {
 		dispatch(registerWithEmailPassword(formData));
 	}
 

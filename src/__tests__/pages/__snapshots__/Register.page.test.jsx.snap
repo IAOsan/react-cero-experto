@@ -1,0 +1,83 @@
+// Vitest Snapshot v1
+
+exports[`<Register /> page > should renders correctly 1`] = `
+<form
+  class="form anima-fade-in-bck"
+>
+  <h2
+    class="heading-2 mb-24 text-primary-alt"
+  >
+    Register
+  </h2>
+  <div
+    class="form__group"
+  >
+    <input
+      class="form__control"
+      id="inputName"
+      name="name"
+      placeholder="Name"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="form__group"
+  >
+    <input
+      class="form__control"
+      id="inputEmail"
+      name="email"
+      placeholder="Email"
+      type="email"
+      value=""
+    />
+  </div>
+  <div
+    class="form__group"
+  >
+    <input
+      class="form__control"
+      id="inputPassword"
+      name="password"
+      placeholder="Password"
+      type="password"
+      value=""
+    />
+  </div>
+  <div
+    class="form__group"
+  >
+    <input
+      class="form__control"
+      id="inputConfirmPassword"
+      name="confirmPassword"
+      placeholder="Confirm Password"
+      type="password"
+      value=""
+    />
+  </div>
+  <button
+    class="btn btn--default btn--primary btn--block my-20"
+    disabled=""
+    type="submit"
+  >
+    <div
+      class="flex flex-ai-c flex-jc-c"
+    >
+      Register
+    </div>
+  </button>
+  <p
+    class="mt-20 text-center"
+  >
+    Already a user?
+    <a
+      class="mx-8 text-underline"
+      href="/auth/login"
+    >
+      LOGIN
+    </a>
+  </p>
+</form>
+`;

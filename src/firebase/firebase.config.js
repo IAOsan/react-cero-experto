@@ -20,4 +20,10 @@ const app = firebase.initializeApp(firebaseConfig);
 const auth = firebaseAuth.getAuth(app);
 const db = firestore.getFirestore();
 
+// only for testing
+if (import.meta.env.MODE === 'test') {
+	firestore.connectFirestoreEmulator(db, 'localhost', 8080);
+	firebaseAuth.connectAuthEmulator(auth, 'http://localhost:9099/');
+}
+
 export { firebaseAuth, firestore, db, auth };

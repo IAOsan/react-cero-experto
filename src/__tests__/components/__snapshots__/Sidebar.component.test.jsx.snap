@@ -1,0 +1,84 @@
+// Vitest Snapshot v1
+
+exports[`<Sidebar /> > should renders properly 1`] = `
+<aside
+  class="bg-dark home__sidebar sidebar anima-slide-in-left"
+>
+  <div
+    class="flex flex-ai-c flex-jc-sb"
+  >
+    <p>
+      <span>
+        <svg
+          class="icon mr-8"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+      test user
+    </p>
+    <button
+      class="btn btn--default btn--dark"
+      type="button"
+    >
+      Logout
+    </button>
+  </div>
+  <button
+    class="btn my-12 text-center sidebar__new-entry"
+    type="button"
+  >
+    <svg
+      class="icon icon-display-3"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <p>
+      New entry
+    </p>
+  </button>
+  <ul
+    class="spacing-y-8 entries"
+  />
+</aside>
+`;
+
+exports[`<Sidebar /> > should renders properly 2`] = `
+<p>
+  <span>
+    <svg
+      class="icon mr-8"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  test user
+</p>
+`;

@@ -1,7 +1,7 @@
 const CLOUD_NAME = 'dflvdlaev';
-const BASE_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}`;
-const ENDPOINT = `${BASE_URL}/image/upload`;
-const PRESET = 'react-journal';
+export const BASE_URL = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}`;
+export const ENDPOINT = `${BASE_URL}/image/upload`;
+export const PRESET = 'react-journal';
 
 export async function uploadImage(file) {
 	const formData = new FormData();

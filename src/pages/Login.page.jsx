@@ -17,8 +17,8 @@ export function Login() {
 		loginSchema,
 		doSubmit
 	);
-	const { isLoading, error } = useSelector((state) => state.ui);
 	const dispatch = useDispatch();
+	const { isLoading, error } = useSelector((state) => state.ui);
 	const someInputsAreEmpty = Object.keys(formData).some((k) => !formData[k]);
 	const disableSubmit = someInputsAreEmpty || isLoading;
 

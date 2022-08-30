@@ -3,22 +3,27 @@ import { useDispatch } from 'react-redux';
 import { selectNote } from '../store/slices/notes/notes.slice';
 import PropTypes from 'prop-types';
 
-function Entry({ id, body, title, imageUrl, createdAt }) {
-	const dispatch = useDispatch();
-	const date = new Date(createdAt);
+export function generateEntryDate(timeStamp) {
+	const date = new Date(timeStamp);
 	const dayWeek = date.toLocaleDateString('en-US', {
 		weekday: 'long',
 	});
 	const dateNumber = date.getDate();
 
-	function handleClick() {
-		dispatch(selectNote(id));
-	}
+	return {
+		date: dateNumber,
+		day: dayWeek,
+	};
+}
+
+function Entry({ id, body, title, imageUrl, createdAt }) {
+	const dispatch = useDispatch();
+	const { date, day } = generateEntryDate(createdAt);
 
 	return (
-		<article className='anima-fade-in-bottom'>
+		<li className='anima-fade-in-bottom'>
 			<button
-				onClick={handleClick}
+				onClick={() => dispatch(selectNote(id))}
 				className='btn w-100 flex entry'
 				type='button'
 			>
@@ -38,13 +43,13 @@ function Entry({ id, body, title, imageUrl, createdAt }) {
 				</div>
 				<div className='flex flex-ai-c flex-jc-c text-center entry__date'>
 					<p>
-						<span>{dayWeek}</span>
+						<span>{day}</span>
 						<br />
-						<strong>{dateNumber}</strong>
+						<strong>{date}</strong>
 					</p>
 				</div>
 			</button>
-		</article>
+		</li>
 	);
 }
 
