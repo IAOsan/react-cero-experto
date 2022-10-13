@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -8,12 +8,13 @@ import CalendarModal from '../components/CalendarModal.component';
 import FabDeleteEvent from '../components/FabDeleteEvent.component';
 import { openModal } from '../store/ui/ui.slice';
 import {
-	selectEventsList,
 	selectActiveEvent,
-	selectActiveEvt,
+	selectEventsState,
 	deleteEvent,
 	clearActiveEvent,
+	loadEvents,
 } from '../store/entities/events.slice';
+import { selectAuthState } from '../store/auth/auth.slice';
 import useActions from '../hooks/useActions';
 import * as storageService from '../services/storage.service';
 import { LAST_VIEW_KEY } from '../config';
@@ -28,15 +29,21 @@ export function HomePage() {
 		selectActiveEvent,
 		deleteEvent,
 		clearActiveEvent,
+		loadEvents,
 	});
-	const eventsList = useSelector(selectEventsList);
-	const activeEvt = useSelector(selectActiveEvt);
+	const { list, active } = useSelector(selectEventsState);
+	const { user } = useSelector(selectAuthState);
 	const [view, setView] = useState(storageService.getItem(LAST_VIEW_KEY));
+
+	useEffect(() => {
+		actions.loadEvents();
+	}, [actions]);
 
 	function eventStyleGetter(event, start, end, isSelected) {
 		return {
 			style: {
-				backgroundColor: isSelected ? '#E66F4C' : '#3459e6',
+				backgroundColor:
+					event.user.id === user.id ? '#3459e6' : '#6f7275',
 				borderRadius: '0px',
 				display: 'block',
 				color: '#f4f4f4',
@@ -63,7 +70,7 @@ export function HomePage() {
 			<main data-testid='home-page'>
 				<Calendar
 					localizer={localizer}
-					events={eventsList}
+					events={list}
 					startAccessor='start'
 					endAccessor='end'
 					eventPropGetter={eventStyleGetter}
@@ -79,8 +86,8 @@ export function HomePage() {
 				/>
 				<CalendarModal />
 				<FabDeleteEvent
-					isVisible={!!activeEvt}
-					onDelete={() => actions.deleteEvent(activeEvt.id)}
+					isVisible={!!active}
+					onDelete={() => actions.deleteEvent(active.id)}
 				/>
 				<FabAddEvent onAdd={() => actions.openModal()} />
 			</main>

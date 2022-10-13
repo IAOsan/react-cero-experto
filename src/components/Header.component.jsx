@@ -1,16 +1,26 @@
 import React from 'react';
-import Navbar from './common/Navbar.component';
+import { useSelector } from 'react-redux';
+import { selectAuthState, logout } from '../store/auth/auth.slice';
+import useActions from '../hooks/useActions';
 import { ExitIcon } from '../constants/icons';
+import Navbar from './common/Navbar.component';
 
 function Header() {
+	const { user } = useSelector(selectAuthState);
+	const actions = useActions({ logout });
+
 	return (
 		<header>
 			<Navbar
 				brand={{
-					label: 'Pedro',
+					label: user.name,
 				}}
 				content={() => (
-					<button className='btn btn-danger' type='button'>
+					<button
+						onClick={() => actions.logout()}
+						className='btn btn-danger'
+						type='button'
+					>
 						<ExitIcon className='icon me-2' />
 						Exit
 					</button>

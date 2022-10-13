@@ -1,20 +1,27 @@
 import React from 'react';
 import { useRoutes, Navigate } from 'react-router-dom';
 import { HomePage, LoginPage, RegisterPage } from '../pages';
+import PrivateRoutes from './PrivateRoutes';
+import PublicRoutes from './PublicRoutes';
 
-function AppRoutes() {
+function AppRoutes({ isAuth }) {
 	const routes = useRoutes([
 		{
-			path: '/',
-			element: <HomePage />,
+			element: <PrivateRoutes isAuthenticated={isAuth} />,
+			children: [{ path: '/', element: <HomePage /> }],
 		},
 		{
-			path: '/login',
-			element: <LoginPage />,
-		},
-		{
-			path: '/sign_up',
-			element: <RegisterPage />,
+			element: <PublicRoutes isAuthenticated={isAuth} />,
+			children: [
+				{
+					path: '/login',
+					element: <LoginPage />,
+				},
+				{
+					path: '/register',
+					element: <RegisterPage />,
+				},
+			],
 		},
 		{
 			path: '/*',

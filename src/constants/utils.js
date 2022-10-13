@@ -5,8 +5,8 @@ export async function makeApiCall(url, opts = {}) {
 			const data = await res.json();
 			const error = new Error();
 			error.status = res.status;
-			error.validationErrors = data?.validationErrors;
-			error.message = data?.message || res.statusText;
+			error.message = res.statusText;
+			error.body = data.error;
 			throw error;
 		}
 		if (!!res.headers.get('content-type')) return res.json();

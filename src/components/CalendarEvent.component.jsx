@@ -5,7 +5,7 @@ function CalendarEvent({ event }) {
 	const { title, user } = event;
 
 	return (
-		<div>
+		<div className='event' data-testid='event'>
 			<span>{title}</span>
 			<strong> - {user.name}</strong>
 		</div>

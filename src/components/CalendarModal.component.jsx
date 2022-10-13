@@ -8,11 +8,11 @@ import { closeModal, selectUiState } from '../store/ui/ui.slice';
 import {
 	addEvent,
 	editEvent,
-	selectActiveEvt,
+	selectEventsState,
 	clearActiveEvent,
 } from '../store/entities/events.slice';
 import useActions from '../hooks/useActions';
-import { newEventSchema } from '../validation/schemas';
+import { eventSchema } from '../validation/schemas';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const formSchema = {
@@ -30,7 +30,7 @@ function CalendarModal() {
 		editEvent,
 	});
 	const { isModalOpen } = useSelector(selectUiState);
-	const activeEvt = useSelector(selectActiveEvt);
+	const { active: activeEvt } = useSelector(selectEventsState);
 	const [formData, setFormData] = useState(formSchema);
 	const [errors, setErrors] = useState({});
 	const isEditing = !!activeEvt;
@@ -83,17 +83,13 @@ function CalendarModal() {
 				id: activeEvt.id,
 			});
 		} else {
-			actions.addEvent({
-				...formData,
-				id: Date.now(),
-				user: { id: 2, name: 'aaa' },
-			});
+			actions.addEvent(formData);
 		}
 		handleClose();
 	}
 
 	function validate() {
-		const { error } = newEventSchema.validate(formData);
+		const { error } = eventSchema.validate(formData);
 		const errors = error?.details.reduce((acc, err) => {
 			const { context, message } = err;
 			acc[context.key] = message;

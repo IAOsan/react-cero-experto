@@ -1,10 +1,13 @@
+import '../testServer/setupTestServer';
 import MockDate from 'mockdate';
 import { BrowserRouter } from 'react-router-dom';
-import { renderWithProviders, screen, setupUser } from '../tests-utils';
-import HomePage from '../../pages/Home.page';
-import * as storageService from '../../services/storage.service';
+import { renderWithProviders, screen, setupUser, act } from '../tests-utils';
+import storageService from '../../services/storage.service';
 import { setupStore } from '../../store/storeConfig';
 import { LAST_VIEW_KEY } from '../../config';
+import { requestTracker } from '../testServer/testServerHandlers';
+import { authState, userCredentials } from '../fixtures';
+import HomePage from '../../pages/Home.page';
 
 const event = {
 	id: 1,
@@ -27,13 +30,18 @@ const initialState = {
 	},
 };
 
-function renderPage(preloadedState, store) {
+function renderPage(preloadedState = {}, store) {
+	const state = {
+		...authState,
+		...preloadedState,
+	};
+
 	renderWithProviders(
 		<BrowserRouter>
 			<HomePage />
 		</BrowserRouter>,
 		{
-			preloadedState,
+			preloadedState: state,
 			store,
 		}
 	);
@@ -98,8 +106,41 @@ describe('<HomePage />', () => {
 		expect(monthViewBtn()).toHaveClass('rbc-active');
 	});
 
+	it('should displays user name in navbar', () => {
+		renderPage();
+
+		expect(screen.getByText(userCredentials.name)).toBeInTheDocument();
+	});
+
+	it('should make a request when page loads ', async () => {
+		await act(async () => {
+			renderPage();
+		});
+
+		await new Promise(process.nextTick);
+
+		expect(requestTracker).toHaveLength(1);
+	});
+
+	it('should displays all events when page loads on the calendar', async () => {
+		await act(async () => {
+			renderPage();
+		});
+
+		await new Promise(process.nextTick);
+
+		expect(screen.queryByText(/event a/i)).toBeInTheDocument();
+		expect(screen.queryByText(/event b/i)).toBeInTheDocument();
+	});
+
 	describe('/*== adding new events ==*/', () => {
-		async function fillForm() {
+		async function fillForm(overrides = {}) {
+			const { title, notes } = {
+				title: 'new event added',
+				notes: ' ',
+				...overrides,
+			};
+
 			await user.click(inputStartDate());
 			await user.click(
 				screen.getByRole('option', {
@@ -112,8 +153,8 @@ describe('<HomePage />', () => {
 					name: /Choose Saturday, January 22nd, 2000/i,
 				})
 			);
-			await user.type(inputTitle(), 'new event added');
-			await user.type(inputNotes(), ' ');
+			await user.type(inputTitle(), title);
+			await user.type(inputNotes(), notes);
 		}
 
 		it('should displays button for add new event', () => {
@@ -132,7 +173,19 @@ describe('<HomePage />', () => {
 			expect(modal()).toBeInTheDocument();
 		});
 
-		it('should close modal when new event added successfuly', async () => {
+		it('should makes request when submit form', async () => {
+			renderPage();
+
+			await user.click(addNewEvtBtn());
+			await fillForm();
+			await user.click(submitBtn());
+
+			const request = requestTracker[requestTracker.length - 1];
+			expect(request.method).toBe('POST');
+			expect(request.path).toBe('/api/v1/events');
+		});
+
+		it('should close modal when new event added', async () => {
 			renderPage();
 
 			await user.click(addNewEvtBtn());
@@ -146,13 +199,17 @@ describe('<HomePage />', () => {
 			renderPage();
 
 			await user.click(addNewEvtBtn());
-			await fillForm();
+			await fillForm({
+				title: 'this event should be rendered',
+			});
 			await user.click(submitBtn());
 
-			expect(screen.getByText(/new event added/i)).toBeInTheDocument();
+			expect(
+				screen.queryByText('this event should be rendered')
+			).toBeInTheDocument();
 		});
 
-		it('should not displays filled form after adding new event successfuly', async () => {
+		it('should not displays filled form after adding new event', async () => {
 			renderPage();
 
 			await user.click(addNewEvtBtn());
@@ -167,14 +224,14 @@ describe('<HomePage />', () => {
 			expect(inputNotes().value).toBe('');
 		});
 
-		it('should not displays filled if close modal', async () => {
+		it('should not displays filled form if close modal', async () => {
 			renderPage();
 
 			await user.click(addNewEvtBtn());
 			await fillForm();
-			await user.click(submitBtn());
-
+			await user.click(modalCloseBtn());
 			await user.click(addNewEvtBtn());
+
 			expect(inputStartDate().value).toBe('');
 			expect(inputEndDate().value).toBe('');
 			expect(inputTitle().value).toBe('');
@@ -183,34 +240,48 @@ describe('<HomePage />', () => {
 	});
 
 	describe('/*== selectioning events == */', () => {
-		let store;
-
-		beforeEach(() => {
-			store = setupStore(initialState);
-			renderPage(undefined, store);
-		});
-
 		it('should select an event when clicks on it', async () => {
-			await user.click(screen.getByText(event.title));
+			const store = setupStore(authState);
+			await act(async () => {
+				renderPage({}, store);
+			});
 
-			const activeEvt = store.getState().entities.events.active;
-			expect(activeEvt).toEqual(event);
+			expect(store.getState().entities.events.active).toBeNull();
+
+			await new Promise(process.nextTick);
+
+			const { list } = store.getState().entities.events;
+			const eventToSelect = list['1'];
+			await user.click(screen.queryByText(eventToSelect.title));
+
+			const { active } = store.getState().entities.events;
+			expect(active).toBeTruthy();
+			expect(active).toEqual(eventToSelect);
 		});
 	});
 
 	describe('/*== editing events ==*/', () => {
-		it('should open modal after double click on any event', async () => {
-			renderPage(initialState);
+		let store, eventToUpdate, anotherEventToUpdate;
 
-			await user.dblClick(screen.getByText(event.title));
+		beforeEach(async () => {
+			store = setupStore(authState);
+			await act(async () => {
+				renderPage({}, store);
+			});
+
+			const { list } = store.getState().entities.events;
+			eventToUpdate = list['1'];
+			anotherEventToUpdate = list['2'];
+		});
+
+		it('should open modal after double click on any event', async () => {
+			await user.dblClick(screen.getByText(eventToUpdate.title));
 
 			expect(modal()).toBeInTheDocument();
 		});
 
 		it('should change modal title', async () => {
-			renderPage(initialState);
-
-			await user.dblClick(screen.getByText(event.title));
+			await user.dblClick(screen.getByText(eventToUpdate.title));
 
 			expect(
 				screen.getByRole('heading', { name: /edit event/i })
@@ -218,32 +289,41 @@ describe('<HomePage />', () => {
 		});
 
 		it('should load event info when modal opens', async () => {
-			renderPage(initialState);
+			await user.dblClick(screen.getByText(eventToUpdate.title));
 
-			await user.dblClick(screen.getByText(event.title));
-
-			const startDate = new Date(event.start).toLocaleDateString(),
-				endDate = new Date(event.end).toLocaleDateString();
+			const startDate = new Date(
+					eventToUpdate.start
+				).toLocaleDateString(),
+				endDate = new Date(eventToUpdate.end).toLocaleDateString();
 
 			expect(inputStartDate().value.includes(startDate)).toBe(true);
 			expect(inputEndDate().value.includes(endDate)).toBe(true);
-			expect(inputTitle().value).toBe(event.title);
-			expect(inputNotes().value).toBe(event.notes);
+			expect(inputTitle().value).toBe(eventToUpdate.title);
+			expect(inputNotes().value).toBe(eventToUpdate.notes);
 		});
 
-		it('should close modal when event edited successfuly', async () => {
-			renderPage(initialState);
+		it('should makes a request when submit form', async () => {
+			await user.dblClick(screen.getByText(eventToUpdate.title));
+			await user.clear(inputTitle());
+			await user.type(inputTitle(), 'event updated');
+			await user.click(submitBtn());
 
-			await user.dblClick(screen.getByText(event.title));
+			await new Promise(process.nextTick);
+
+			const request = requestTracker[requestTracker.length - 1];
+			expect(request.method).toBe('PUT');
+			expect(request.path).toBe(`/api/v1/events/${eventToUpdate.id}`);
+		});
+
+		it('should close modal when submit form', async () => {
+			await user.dblClick(screen.getByText(eventToUpdate.title));
 			await user.click(submitBtn());
 
 			expect(modal()).toBeNull();
 		});
 
 		it('should displays event updated after successful edition', async () => {
-			renderPage(initialState);
-
-			await user.dblClick(screen.getByText(event.title));
+			await user.dblClick(screen.getByText(eventToUpdate.title));
 			await user.clear(inputTitle());
 			await user.type(inputTitle(), 'event updated');
 			await user.click(submitBtn());
@@ -252,43 +332,35 @@ describe('<HomePage />', () => {
 		});
 
 		it('should displays events info correctly when clicking multiple events', async () => {
-			const state = JSON.parse(JSON.stringify(initialState));
-			const eventB = {
-				...event,
-				id: 2,
-				start: '2000-01-25T06:00:00.000Z',
-				end: '2000-01-26T06:00:00.000Z',
-				title: 'some event b',
-			};
-			state.entities.events.list[2] = eventB;
-
-			renderPage(state);
-
-			await user.dblClick(screen.getByText(event.title));
-			const startDate = new Date(event.start).toLocaleDateString(),
-				endDate = new Date(event.end).toLocaleDateString();
+			await user.dblClick(screen.getByText(eventToUpdate.title));
+			const startDate = new Date(
+					eventToUpdate.start
+				).toLocaleDateString(),
+				endDate = new Date(eventToUpdate.end).toLocaleDateString();
 
 			expect(inputStartDate().value.includes(startDate)).toBe(true);
 			expect(inputEndDate().value.includes(endDate)).toBe(true);
-			expect(inputTitle().value).toBe(event.title);
-			expect(inputNotes().value).toBe(event.notes);
+			expect(inputTitle().value).toBe(eventToUpdate.title);
+			expect(inputNotes().value).toBe(eventToUpdate.notes);
 
 			await user.click(modalCloseBtn());
 
-			await user.dblClick(screen.getByText(eventB.title));
-			const startDateB = new Date(eventB.start).toLocaleDateString(),
-				endDateB = new Date(eventB.end).toLocaleDateString();
+			await user.dblClick(screen.getByText(anotherEventToUpdate.title));
+			const startDateB = new Date(
+					anotherEventToUpdate.start
+				).toLocaleDateString(),
+				endDateB = new Date(
+					anotherEventToUpdate.end
+				).toLocaleDateString();
 
 			expect(inputStartDate().value.includes(startDateB)).toBe(true);
 			expect(inputEndDate().value.includes(endDateB)).toBe(true);
-			expect(inputTitle().value).toBe(eventB.title);
-			expect(inputNotes().value).toBe(eventB.notes);
+			expect(inputTitle().value).toBe(anotherEventToUpdate.title);
+			expect(inputNotes().value).toBe(anotherEventToUpdate.notes);
 		});
 
-		it('should displays empty form  if event was edited successfuly and open modal for new event', async () => {
-			renderPage(initialState);
-
-			await user.dblClick(screen.getByText(event.title));
+		it('should displays empty form if event was edited successfuly and open modal for new event', async () => {
+			await user.dblClick(screen.getByText(eventToUpdate.title));
 			await user.clear(inputTitle());
 			await user.type(inputTitle(), 'event updated');
 			await user.click(submitBtn());
@@ -304,9 +376,7 @@ describe('<HomePage />', () => {
 		});
 
 		it('should displays empty form if close modal and it reopens for new event', async () => {
-			renderPage(initialState);
-
-			await user.dblClick(screen.getByText(event.title));
+			await user.dblClick(screen.getByText(eventToUpdate.title));
 			await user.clear(inputTitle());
 			await user.type(inputTitle(), 'event updated');
 
@@ -324,48 +394,63 @@ describe('<HomePage />', () => {
 	});
 
 	describe('/*== deleting events ==*/', () => {
-		it('should not displays delete button if no event is selected', () => {
-			renderPage();
+		let store, eventToDelete;
 
+		beforeEach(async () => {
+			store = setupStore(authState);
+			await act(async () => {
+				renderPage({}, store);
+			});
+
+			const { list } = store.getState().entities.events;
+			eventToDelete = list['1'];
+		});
+
+		it('should not displays delete button if no event is selected', () => {
 			expect(deleteEvtBtn()).toBeNull();
 		});
 
 		it('should displays delete button when select an event', async () => {
-			renderPage(initialState);
-
-			await user.click(screen.getByText(event.title));
+			await user.click(screen.getByText(eventToDelete.title));
 
 			expect(deleteEvtBtn()).toBeInTheDocument();
 		});
 
-		it('should delete an event when clicks delete button', async () => {
-			renderPage(initialState);
-
-			expect(screen.getByText(event.title)).toBeInTheDocument();
-
-			await user.click(screen.getByText(event.title));
+		it('should makes a request when deleting an event', async () => {
+			await user.click(screen.getByText(eventToDelete.title));
 			await user.click(deleteEvtBtn());
+
+			await new Promise(process.nextTick);
+
+			const request = requestTracker[requestTracker.length - 1];
+			expect(request.method).toBe('DELETE');
+			expect(request.path).toBe(`/api/v1/events/${eventToDelete.id}`);
+		});
+
+		it('should delete an event when clicks delete button', async () => {
+			expect(screen.getByText(eventToDelete.title)).toBeInTheDocument();
+
+			await user.click(screen.getByText(eventToDelete.title));
+			await user.click(deleteEvtBtn());
+
+			await new Promise(process.nextTick);
 
 			expect(screen.queryByText(event.title)).toBeNull();
 		});
 
 		it('should not displays delete button after deleting an event', async () => {
-			renderPage(initialState);
+			expect(screen.getByText(eventToDelete.title)).toBeInTheDocument();
 
-			expect(screen.getByText(event.title)).toBeInTheDocument();
-
-			await user.click(screen.getByText(event.title));
+			await user.click(screen.getByText(eventToDelete.title));
 			await user.click(deleteEvtBtn());
 
 			expect(deleteEvtBtn()).toBeNull();
 		});
 
 		it('should not displays filled form if delete an event and clicking button to add new event', async () => {
-			renderPage(initialState);
+			expect(screen.getByText(eventToDelete.title)).toBeInTheDocument();
 
-			expect(screen.getByText(event.title)).toBeInTheDocument();
-
-			await user.click(screen.getByText(event.title));
+			await user.click(screen.getByText(eventToDelete.title));
 			await user.click(deleteEvtBtn());
 			await user.click(addNewEvtBtn());
 

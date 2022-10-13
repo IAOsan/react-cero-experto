@@ -11,9 +11,7 @@ async function login(req, res) {
 			return res.status(404).json({
 				status: 'failed',
 				error: {
-					email: {
-						message: '"User" not exists',
-					},
+					email: '"User" not exists',
 				},
 			});
 		}
@@ -24,9 +22,7 @@ async function login(req, res) {
 			return res.status(400).json({
 				status: 'success',
 				error: {
-					password: {
-						message: '"Password" does not match',
-					},
+					password: '"Password" does not match',
 				},
 			});
 		}
@@ -63,9 +59,7 @@ async function register(req, res) {
 			return res.status(400).json({
 				status: 'failed',
 				error: {
-					email: {
-						message: '"Email" already exists',
-					},
+					email: '"Email" already exists',
 				},
 			});
 		}

@@ -20,3 +20,11 @@ export function getItem(key, defaultValue) {
 export function clear() {
 	localStorage.clear();
 }
+
+const service = {
+	setItem,
+	getItem,
+	clear,
+};
+
+export default service;

@@ -3,3 +3,10 @@ export function mapToList(map, transformItem) {
 		transformItem ? transformItem(map[key]) : map[key]
 	);
 }
+
+export function listToMap(list) {
+	return list.reduce((acc, o) => {
+		acc[o.id] = o;
+		return acc;
+	}, {});
+}
