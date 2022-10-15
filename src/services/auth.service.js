@@ -6,13 +6,13 @@ import { TOKEN_KEY } from '../config';
 const ENDPOINT = '/auth';
 
 export async function login(user) {
-	const { email, password } = user;
 	try {
 		const res = await httpService.post(ENDPOINT, {
-			body: JSON.stringify({ email, password }),
+			body: JSON.stringify(user),
 		});
-		storageService.setItem(TOKEN_KEY, res.data.user.token);
-		return res;
+		const { token, id, email, name } = res.data.user;
+		storageService.setItem(TOKEN_KEY, token);
+		return { id, email, name };
 	} catch (error) {
 		handleError(error);
 	}

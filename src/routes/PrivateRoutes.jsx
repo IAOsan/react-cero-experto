@@ -1,17 +1,15 @@
-import { Outlet, Navigate, useLocation } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-function PrivateRoutes({ isAuthenticated }) {
-	const location = useLocation();
-	return isAuthenticated ? (
-		<Outlet />
-	) : (
-		<Navigate replace to='/login' state={{ lastPath: location.pathname }} />
-	);
+function PrivateRoutes({ isAuth, redirectTo }) {
+	if (isAuth) {
+		return <Outlet />;
+	}
+	return <Navigate to={redirectTo} replace />;
 }
 
 PrivateRoutes.propTypes = {
-	isAuthenticated: PropTypes.bool.isRequired,
+	isAuth: PropTypes.bool.isRequired,
 	redirectTo: PropTypes.string,
 };
 

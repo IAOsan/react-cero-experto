@@ -43,60 +43,84 @@ describe('<App />', () => {
 		spinner = () => screen.queryByText(/loading\.\.\./i),
 		logoutBtn = () => screen.queryByRole('button', { name: /exit/i });
 
-	beforeEach(() => {
-		storageService.clear();
-	});
+	describe('/*== routing ==*/', () => {
+		it('should redirects to login page if you are not authenticated', async () => {
+			renderApp();
 
-	it('should redirects to login page if your are not authenticated', async () => {
-		renderApp();
+			await waitFor(() => {
+				expect(loginPage()).toBeInTheDocument();
+			});
+		});
 
-		expect(loginPage()).toBeInTheDocument();
-	});
+		it('should displays login page if you are not authenticated', async () => {
+			renderApp(['/login']);
+			await waitFor(() => {
+				expect(loginPage()).toBeInTheDocument();
+			});
+		});
 
-	it('should displays only home page in the route "/"', () => {
-		renderApp(['/'], authState);
+		it('should displays register page if you are not authenticated', async () => {
+			renderApp(['/register']);
+			await waitFor(() => {
+				expect(registerPage()).toBeInTheDocument();
+			});
+		});
 
-		expect(homePage()).toBeInTheDocument();
-		expect(loginPage()).toBeNull();
-		expect(registerPage()).toBeNull();
-	});
+		it('should displays home page if you are authenticated', async () => {
+			renderApp(['/'], authState);
 
-	it('should displays only login page in the route "/login"', () => {
-		renderApp(['/login']);
+			await waitFor(() => {
+				expect(homePage()).toBeInTheDocument();
+			});
+		});
 
-		expect(loginPage()).toBeInTheDocument();
-		expect(homePage()).toBeNull();
-		expect(registerPage()).toBeNull();
-	});
+		it('should not displays register page if you are authenticated', async () => {
+			renderApp(['/register'], authState);
 
-	it('should displays only register page in the route "/register"', () => {
-		renderApp(['/register']);
+			await waitFor(() => {
+				expect(registerPage()).toBeNull();
+				expect(homePage()).toBeInTheDocument();
+			});
+		});
 
-		expect(registerPage()).toBeInTheDocument();
-		expect(loginPage()).toBeNull();
-		expect(homePage()).toBeNull();
-	});
+		it('should not displays login page if you are authenticated', async () => {
+			renderApp(['/login'], authState);
 
-	it('should not displays register page if you are authenticated', () => {
-		renderApp(['/register'], authState);
+			await waitFor(() => {
+				expect(loginPage()).toBeNull();
+				expect(homePage()).toBeInTheDocument();
+			});
+		});
 
-		expect(registerPage()).toBeNull();
-		expect(homePage()).toBeInTheDocument();
-	});
+		it('should displays only home page in the route "/"', async () => {
+			renderApp(['/'], authState);
 
-	it('should not displays login page if you are authenticated', () => {
-		renderApp(['/login'], authState);
+			await waitFor(() => {
+				expect(homePage()).toBeInTheDocument();
+				expect(loginPage()).toBeNull();
+				expect(registerPage()).toBeNull();
+			});
+		});
 
-		expect(loginPage()).toBeNull();
-		expect(homePage()).toBeInTheDocument();
-	});
+		it('should displays only login page in the route "/login"', async () => {
+			renderApp(['/login']);
 
-	it('should displays home page if current user exists when page loads', () => {
-		storageService.setItem(TOKEN_KEY, token);
+			await waitFor(() => {
+				expect(loginPage()).toBeInTheDocument();
+				expect(homePage()).toBeNull();
+				expect(registerPage()).toBeNull();
+			});
+		});
 
-		renderApp();
+		it('should displays only register page in the route "/register"', async () => {
+			renderApp(['/register']);
 
-		expect(homePage()).toBeInTheDocument();
+			await waitFor(() => {
+				expect(registerPage()).toBeInTheDocument();
+				expect(loginPage()).toBeNull();
+				expect(homePage()).toBeNull();
+			});
+		});
 	});
 
 	describe('/*== login ==*/', () => {
@@ -112,36 +136,60 @@ describe('<App />', () => {
 
 		beforeEach(() => {
 			renderApp(['/login']);
+		});
+
+		afterEach(() => {
 			storageService.clear();
 		});
 
 		it('should displays message for non account', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			expect(
 				screen.getByText('Dont have an account?')
 			).toBeInTheDocument();
 		});
 
 		it('should redirects to signup page when clicks signup link', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await user.click(linkSignUp());
 
-			expect(registerPage()).toBeInTheDocument();
+			await waitFor(() => {
+				expect(registerPage()).toBeInTheDocument();
+			});
 		});
 
 		it('should make a request when form is submitted', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await fillForm();
 			await user.keyboard('{Enter>1}');
 
-			expect(requestTracker).toHaveLength(1);
+			await waitForElementToBeRemoved(spinner());
+
+			const request = requestTracker[requestTracker.length - 1];
+			expect(request.method).toBe('POST');
+			expect(request.path).toBe('/api/v1/auth');
 		});
 
-		it('should disable submit button whe making request', async () => {
+		it('should disable submit button when a making request', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await fillForm();
 			await user.dblClick(submitLoginBtn());
 
-			expect(requestTracker).toHaveLength(1);
+			await waitForElementToBeRemoved(spinner());
+
+			const requests = requestTracker.filter((r) => r.method === 'POST');
+
+			expect(requests[0].path).toBe('/api/v1/auth');
+			expect(requests).toHaveLength(1);
 		});
 
 		it('should display spinner after clicking submit button', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await fillForm();
 
 			expect(spinner()).toBeNull();
@@ -152,16 +200,19 @@ describe('<App />', () => {
 		});
 
 		it('should hides spinner after request finished', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await fillForm();
 			await user.click(submitLoginBtn());
 
 			await waitFor(() => {
-				expect(requestTracker).toHaveLength(1);
 				expect(spinner()).toBeNull();
 			});
 		});
 
 		it('should store token after login in local storage', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await fillForm();
 			await user.keyboard('{Enter>1}');
 
@@ -177,16 +228,22 @@ describe('<App />', () => {
 		});
 
 		it('should redirects to home page if you are authenticated', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await fillForm();
-			await user.click(submitLoginBtn());
+			await user.keyboard('{Enter>1}');
 
 			await waitForElementToBeRemoved(spinner());
 
-			expect(loginPage()).toBeNull();
+			await waitFor(() => {
+				expect(loginPage()).toBeNull();
+			});
 		});
 
 		describe('validation', () => {
 			it('should display and error if user not found', async () => {
+				await waitForElementToBeRemoved(spinner());
+
 				await fillForm({
 					email: 'user5@mail.com',
 					password: 'user5password',
@@ -199,6 +256,8 @@ describe('<App />', () => {
 			});
 
 			it('should display and error if password password do not match', async () => {
+				await waitForElementToBeRemoved(spinner());
+
 				await fillForm({
 					email: 'user2@mail.com',
 					password: 'user1password',
@@ -211,6 +270,37 @@ describe('<App />', () => {
 					screen.getByText(/password not match/i)
 				).toBeInTheDocument();
 			});
+		});
+	});
+
+	describe('/*== logout ==*/', () => {
+		beforeEach(() => {
+			storageService.setItem(TOKEN_KEY, token);
+			renderApp();
+		});
+
+		afterEach(() => {
+			storageService.clear();
+		});
+
+		it('should redirects to login page when clicks logout button', async () => {
+			await waitForElementToBeRemoved(spinner());
+
+			await user.click(logoutBtn());
+
+			await waitFor(() => {
+				expect(loginPage()).toBeInTheDocument();
+			});
+		});
+
+		it('should clear token in local storage after clicks logout button', async () => {
+			await waitForElementToBeRemoved(spinner());
+
+			await user.click(logoutBtn());
+
+			const token = storageService.getItem(TOKEN_KEY);
+
+			expect(token).toBeUndefined();
 		});
 	});
 
@@ -229,38 +319,62 @@ describe('<App />', () => {
 			await user.type(inputConfirmPassword(), confirmPassword);
 		}
 
-		beforeEach(() => {
+		beforeEach(async () => {
 			renderApp(['/register']);
+		});
+
+		afterEach(() => {
 			storageService.clear();
 		});
 
 		it('should displays message for login', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			expect(
 				screen.getByText('You are already a user?')
 			).toBeInTheDocument();
 		});
 
 		it('should redirects to login page when clicks login link', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await user.click(linkLogin());
 
-			expect(loginPage()).toBeInTheDocument();
+			await waitFor(() => {
+				expect(loginPage()).toBeInTheDocument();
+			});
 		});
 
-		it('should make request when form is submitted', async () => {
+		it('should makes a request when form is submitted', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await fillForm();
 			await user.keyboard('{Enter>1}');
 
-			expect(requestTracker).toHaveLength(1);
+			await waitForElementToBeRemoved(spinner());
+
+			const request = requestTracker[requestTracker.length - 1];
+			expect(request.method).toBe('POST');
+			expect(request.path).toBe('/api/v1/auth/register');
 		});
 
-		it('should disable submit button whe making request', async () => {
-			await fillForm();
-			await user.keyboard('{Enter>2}');
+		it('should disable submit button when making a request', async () => {
+			await waitForElementToBeRemoved(spinner());
 
-			expect(requestTracker).toHaveLength(1);
+			await fillForm();
+			await user.keyboard('{Enter>3}');
+
+			await waitForElementToBeRemoved(spinner());
+
+			const requests = requestTracker.filter((r) => r.method === 'POST');
+
+			expect(requests[0].path).toBe('/api/v1/auth/register');
+			expect(requests).toHaveLength(1);
 		});
 
 		it('should display spinner after clicking submit button', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await fillForm();
 
 			expect(spinner()).toBeNull();
@@ -270,42 +384,42 @@ describe('<App />', () => {
 			expect(spinner()).toBeInTheDocument();
 		});
 
-		it('should hides spinner after request finished', async () => {
-			await fillForm();
-			await user.click(submitRegisterBtn());
-
-			await waitFor(() => {
-				expect(requestTracker).toHaveLength(1);
-				expect(spinner()).toBeNull();
-			});
-		});
-
 		it('should store token in local storage after register a user', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await fillForm();
 			await user.keyboard('{Enter>1}');
 
 			await waitForElementToBeRemoved(spinner());
 
-			const token = storageService.getItem('token', '');
-			const decoded = jwt_decode(token);
+			await waitFor(() => {
+				const token = storageService.getItem(TOKEN_KEY, '');
+				const decoded = jwt_decode(token);
 
-			expect(token).toBeTruthy();
-			expect(decoded.name).toBeTruthy();
-			expect(decoded.email).toBeTruthy();
-			expect(decoded.id).toBeTruthy();
+				expect(token).toBeTruthy();
+				expect(decoded.name).toBeTruthy();
+				expect(decoded.email).toBeTruthy();
+				expect(decoded.id).toBeTruthy();
+			});
 		});
 
 		it('should redirects to home page after register', async () => {
+			await waitForElementToBeRemoved(spinner());
+
 			await fillForm();
-			await user.click(submitRegisterBtn());
+			await user.keyboard('{Enter>1}');
 
 			await waitForElementToBeRemoved(spinner());
 
-			expect(registerPage()).toBeNull();
+			await waitFor(() => {
+				expect(homePage()).toBeInTheDocument();
+			});
 		});
 
 		describe('validation', () => {
 			it('should displays error if user already exists', async () => {
+				await waitForElementToBeRemoved(spinner());
+
 				await fillForm({
 					email: 'existinguser@mail.com',
 				});
@@ -317,27 +431,6 @@ describe('<App />', () => {
 					screen.getByText('user already exists')
 				).toBeInTheDocument();
 			});
-		});
-	});
-
-	describe('/*== logout ==*/', () => {
-		beforeEach(() => {
-			storageService.setItem(TOKEN_KEY, token);
-			renderApp();
-		});
-
-		it('should redirects to login page when clicks logout button', async () => {
-			await user.click(logoutBtn());
-
-			expect(loginPage()).toBeInTheDocument();
-		});
-
-		it('should clear token in local storage after clicks logout button', async () => {
-			await user.click(logoutBtn());
-
-			const token = storageService.getItem(TOKEN_KEY);
-
-			expect(token).toBeUndefined();
 		});
 	});
 });

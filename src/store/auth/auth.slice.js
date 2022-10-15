@@ -17,6 +17,7 @@ const slice = createSlice({
 	},
 	reducers: {
 		logged_in(state, { payload }) {
+			state.checking = false;
 			state.isAuth = true;
 			state.user = payload;
 		},
@@ -44,7 +45,6 @@ export const registerEmailAndPassword = (user) => async (dispatch) => {
 	dispatch(loadingStatus());
 	try {
 		const res = await userService.register(user);
-		authService.loginWithToken(res.token);
 		dispatch(successStatus());
 		dispatch(logged_in(res));
 	} catch (error) {
@@ -58,7 +58,7 @@ export const loginEmailAndPassword = (user) => async (dispatch) => {
 	try {
 		const res = await authService.login(user);
 		dispatch(successStatus());
-		dispatch(logged_in(res.data.user));
+		dispatch(logged_in(res));
 	} catch (error) {
 		dispatch(errorStatus());
 		dispatch(setError({ login: error }));

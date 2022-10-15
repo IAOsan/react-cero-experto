@@ -22,6 +22,7 @@ export function RegisterPage() {
 	);
 	const actions = useActions({ registerEmailAndPassword });
 	const { status, error } = useSelector(selectUiState);
+
 	const someInputsAreEmpty = Object.keys(formData).some((k) => !formData[k]);
 	const isSubmitDisabled = someInputsAreEmpty || status === 'loading';
 

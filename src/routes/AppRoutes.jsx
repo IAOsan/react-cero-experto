@@ -5,13 +5,18 @@ import PrivateRoutes from './PrivateRoutes';
 import PublicRoutes from './PublicRoutes';
 
 function AppRoutes({ isAuth }) {
-	const routes = useRoutes([
+	return useRoutes([
 		{
-			element: <PrivateRoutes isAuthenticated={isAuth} />,
-			children: [{ path: '/', element: <HomePage /> }],
+			element: <PrivateRoutes isAuth={isAuth} redirectTo='/login' />,
+			children: [
+				{
+					path: '/',
+					element: <HomePage />,
+				},
+			],
 		},
 		{
-			element: <PublicRoutes isAuthenticated={isAuth} />,
+			element: <PublicRoutes isAuth={isAuth} redirectTo='/' />,
 			children: [
 				{
 					path: '/login',
@@ -24,12 +29,10 @@ function AppRoutes({ isAuth }) {
 			],
 		},
 		{
-			path: '/*',
+			path: '*',
 			element: <Navigate to='/' replace={true} />,
 		},
 	]);
-
-	return routes;
 }
 
 export default AppRoutes;

@@ -6,6 +6,7 @@
 	"scripts": {
 		"test": "vitest --run",
 		"test:watch": "vitest",
+		"test:coverage": "vitest --coverage",
 		"lint": "eslint --max-warnings=0 src",
 		"dev": "vite",
 		"build": "vite build",

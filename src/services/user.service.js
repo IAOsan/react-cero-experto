@@ -1,19 +1,16 @@
 import httpService, { handleError } from './http.service';
+import authService from './auth.service';
 
 const ENDPOINT = '/auth/register';
 
 export async function register(user) {
-	const { name, email, password } = user;
-
 	try {
 		const res = await httpService.post(ENDPOINT, {
-			body: JSON.stringify({
-				name,
-				email,
-				password,
-			}),
+			body: JSON.stringify(user),
 		});
-		return res.data.user;
+		const { token, id, name, email } = res.data.user;
+		authService.loginWithToken(token);
+		return { id, name, email };
 	} catch (error) {
 		handleError(error);
 	}

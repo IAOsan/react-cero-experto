@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { events } from '../fixtures';
+import { events, token } from '../fixtures';
 
 const baseUrl = import.meta.env.VITE_API_URL,
 	authEndpoint = `${baseUrl}/api/v1/auth`,
@@ -30,6 +30,35 @@ function track(req) {
 	});
 }
 
+const renewToken = rest.get(`${authEndpoint}/renew`, (req, res, ctx) => {
+	const token = req.headers.get('x-token');
+	track(req);
+
+	if (!token) {
+		return res(
+			ctx.status(401),
+			ctx.json({
+				status: 'failed',
+				error: {
+					token: {
+						message: '"Token" is not valid',
+					},
+				},
+			})
+		);
+	}
+
+	return res(
+		ctx.status(200),
+		ctx.json({
+			status: 'success',
+			data: {
+				token,
+			},
+		})
+	);
+});
+
 const createNewUser = rest.post(`${authEndpoint}/register`, (req, res, ctx) => {
 	const { body } = req;
 	const status = body.email.includes('existing') ? 400 : 201;
@@ -51,7 +80,7 @@ const createNewUser = rest.post(`${authEndpoint}/register`, (req, res, ctx) => {
 							password:
 								'$2a$10$ilfLxMWcG7BIqn7CJOA0kOLzFSKonGicxqn.dnK6ZihOtNsFfrJra',
 							id: '63401ebd16ee9233687080e1',
-							token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWQiOiIxIiwibmFtZSI6Imdva3UiLCJlbWFpbCI6InVzZXIxQG1haWxjb20iLCJpYXQiOjE1MTYyMzkwMjJ9.5gK2c3YUFS-q4doWdIiFjOcJH7iBkv3_1BvmyVRxUWg',
+							token,
 						},
 					},
 			  };
@@ -65,11 +94,13 @@ const loginUser = rest.post(authEndpoint, (req, res, ctx) => {
 	const { email, password } = req.body;
 	const users = [
 		{
+			id: '63436dbaca274b15e46fc3d0',
 			email: 'user1@mail.com',
 			name: 'user1',
 			password: 'user1password',
 		},
 		{
+			id: '63401ebd16ee9233687080e1',
 			email: 'user2@mail.com',
 			name: 'user2',
 			password: 'user2password',
@@ -184,6 +215,7 @@ const deleteAnEvent = rest.delete(`${eventsEndpoint}/:id`, (req, res, ctx) => {
 });
 
 const handlers = [
+	renewToken,
 	createNewUser,
 	loginUser,
 	createNewEvent,
